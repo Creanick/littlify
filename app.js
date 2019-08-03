@@ -2,6 +2,12 @@ const express = require("express");
 const devRun = require("./utils/devRun");
 const app = express();
 
+//enable logger
+devRun(() => {
+  const morgan = require("morgan");
+  app.use(morgan("dev"));
+});
+
 app.use((req, res) => {
   res.json({
     message: "Message"
