@@ -1,8 +1,7 @@
 const express = require("express");
-const morgan = require("morgan");
+const devRun = require("./utils/devRun");
 const app = express();
 
-// devRun(() => app.use(morgan("dev")));
 app.use((req, res) => {
   res.json({
     message: "Message"
@@ -11,5 +10,7 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log("Server running");
+  devRun(() => {
+    console.log("Server running");
+  });
 });
