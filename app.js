@@ -10,7 +10,8 @@ devRun(() => {
 
 app.use((req, res) => {
   res.json({
-    message: "Message"
+    message: "Message",
+    owner: process.env.OWNER || "Unknown"
   });
 });
 
