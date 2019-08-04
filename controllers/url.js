@@ -38,7 +38,6 @@ const urlLookup = (req, res, next) => {
 
 const getOriginalUrl = (req, res, next) => {
   const code = req.params.code;
-  console.log(code);
   getUrl(code)
     .then(result => {
       res.json({

@@ -1,3 +1,3 @@
 module.exports = func => {
-  process.env.NODE_ENV === "development" && func && func();
+  process.env.NODE_ENV !== "production" && func && func();
 };

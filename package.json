@@ -4,9 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
+    "prod": "NODE_ENV=production node app.js",
+    "dev": "NODE_ENV=development nodemon app.js",
     "test": "jest",
-    "start": "concurrently \"npm run dev\" \"npm start --prefix client\"",
+    "start": "node app.js",
+    "start-dev": "concurrently \"npm run dev\" \"npm start --prefix client\"",
     "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "author": "manick lal jamadar",

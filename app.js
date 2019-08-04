@@ -3,9 +3,13 @@ const devRun = require("./utils/devRun");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const testRouter = require("./routes/test");
+const path = require("path");
 const urlRouter = require("./routes/url");
 const app = express();
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
 app.use(bodyParser.json());
 //enable logger
 devRun(() => {
@@ -16,6 +20,11 @@ devRun(() => {
 //routers
 // app.use("/test", testRouter);
 app.use(urlRouter);
+if (process.env.NODE_ENV === "production") {
+  app.get("*", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+}
 
 app.use((req, res, next) => {
   const error = new Error();
