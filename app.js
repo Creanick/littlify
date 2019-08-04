@@ -6,6 +6,7 @@ const testRouter = require("./routes/test");
 const path = require("path");
 const urlRouter = require("./routes/url");
 const app = express();
+app.enable("trust proxy");
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
@@ -17,7 +18,7 @@ devRun(() => {
 });
 
 //routers
-// app.use("/test", testRouter);
+app.use("/test", testRouter);
 devRun(() => {
   const cors = require("cors");
   app.use(cors());
