@@ -6,7 +6,6 @@ const testRouter = require("./routes/test");
 const path = require("path");
 const urlRouter = require("./routes/url");
 const app = express();
-
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
