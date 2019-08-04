@@ -19,6 +19,10 @@ devRun(() => {
 
 //routers
 // app.use("/test", testRouter);
+devRun(() => {
+  const cors = require("cors");
+  app.use(cors());
+});
 app.use(urlRouter);
 if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res, next) => {
@@ -49,7 +53,7 @@ const dbUrl = `mongodb+srv://${process.env.DB_USER}:${
 mongoose
   .connect(dbUrl, { useNewUrlParser: true })
   .then(data => {
-    devRun(() => console.log(`Database connected DB: ${process.env.DB_NAME}`));
+    console.log(`Database connected DB: ${process.env.DB_NAME}`);
   })
   .catch(err => {
     devRun(() => {
@@ -59,7 +63,5 @@ mongoose
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  devRun(() => {
-    console.log("Server running");
-  });
+  console.log("Server running");
 });
