@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import styled from "styled-components";
+import Qrcode from "qrcode.react";
 import styles from "./App.module.css";
 
 const Input = styled.input`
@@ -29,6 +30,10 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   margin: 10px 0px;
+  :disabled {
+    background: grey;
+    cursor: not-allowed;
+  }
 `;
 const URL = styled.p`
   border: 1px solid green;
@@ -40,13 +45,15 @@ const URL = styled.p`
 `;
 class App extends React.Component {
   state = {
-    shortUrl: ""
+    shortUrl: "",
+    isLoading: false
   };
   constructor(props) {
     super(props);
     this.inputRef = React.createRef();
   }
   shortUrl = () => {
+    this.setState({ isLoading: true });
     const originalUrl = this.inputRef.current.value;
     const apiUrl = `${process.env.REACT_APP_API_HOST}/short-url`;
     const options = {
@@ -58,14 +65,38 @@ class App extends React.Component {
     };
     axios(options)
       .then(result => {
-        this.setState({ shortUrl: result.data.shortUrl });
+        this.setState({ shortUrl: result.data.shortUrl, isLoading: false });
       })
       .catch(err => {
         console.log(err);
       });
     this.inputRef.current.value = "";
   };
+  downloadQr = () => {
+    const canvasQr = document.getElementById("canvasQr");
+    const imageUrl = canvasQr.toDataURL("image/png");
+    const downloadLink = document.createElement("a");
+    downloadLink.href = imageUrl;
+    downloadLink.download = "short-url.png";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
   render() {
+    let generatedArea = null;
+    if (this.state.shortUrl.length > 0) {
+      generatedArea = (
+        <div>
+          <URL>{this.state.shortUrl}</URL>
+          <div>
+            <Qrcode id="canvasQr" value={this.state.shortUrl} />
+          </div>
+          <div>
+            <Button onClick={this.downloadQr}>Download</Button>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className={styles.App}>
         <div className={styles.Container}>
@@ -75,10 +106,10 @@ class App extends React.Component {
             ref={this.inputRef}
             placeholder="Enter Url you want to short"
           />
-          <Button onClick={this.shortUrl}>Shorten</Button>
-          <div>
-            {this.state.shortUrl.length > 0 && <URL>{this.state.shortUrl}</URL>}
-          </div>
+          <Button onClick={this.shortUrl} disabled={this.state.isLoading}>
+            Shorten
+          </Button>
+          {generatedArea}
         </div>
       </div>
     );
