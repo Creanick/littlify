@@ -3,6 +3,8 @@ import axios from "axios";
 import styled from "styled-components";
 import Qrcode from "qrcode.react";
 import styles from "./App.module.css";
+import { isWebUri } from "valid-url";
+import Message from "./components/Message/Message";
 
 const Input = styled.input`
   padding: 10px 12px;
@@ -46,15 +48,26 @@ const URL = styled.p`
 class App extends React.Component {
   state = {
     shortUrl: "",
-    isLoading: false
+    isLoading: false,
+    isMessage: ""
   };
   constructor(props) {
     super(props);
     this.inputRef = React.createRef();
   }
+  openMessage = message => {
+    this.setState({ isMessage: message });
+  };
+  closeMessage = () => {
+    this.setState({ isMessage: "" });
+  };
   shortUrl = () => {
-    this.setState({ isLoading: true });
     const originalUrl = this.inputRef.current.value;
+    if (!isWebUri(originalUrl)) {
+      this.setState({ isMessage: "Provided Url is Invalid" });
+      return;
+    }
+    this.setState({ isLoading: true });
     const apiUrl = `${process.env.REACT_APP_API_HOST}/short-url`;
     const options = {
       method: "post",
@@ -111,6 +124,11 @@ class App extends React.Component {
           </Button>
           {generatedArea}
         </div>
+        <Message
+          open={this.state.isMessage.length > 0}
+          message={this.state.isMessage}
+          onClose={this.closeMessage}
+        />
       </div>
     );
   }
