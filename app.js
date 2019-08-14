@@ -6,6 +6,7 @@ const testRouter = require("./routes/test");
 const path = require("path");
 const urlRouter = require("./routes/url");
 const app = express();
+const requestIp = require("request-ip");
 app.enable("trust proxy");
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -18,6 +19,9 @@ devRun(() => {
 });
 
 //routers
+app.get("/my-ip", (req, res, next) => {
+  res.send(requestIp.getClientIp(req));
+});
 app.use("/test", testRouter);
 devRun(() => {
   const cors = require("cors");

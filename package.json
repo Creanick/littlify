@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "concurrently": "^4.1.1",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "request-ip": "^2.1.3"
   }
 }
